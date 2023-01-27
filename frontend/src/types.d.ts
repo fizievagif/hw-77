@@ -4,6 +4,9 @@ export interface TredMutation {
   image: File | null;
 }
 
-export interface Tred extends TredMutation{
+export interface Tred {
   id: string;
+  author: string;
+  message: string;
+  image: string | null;
 }

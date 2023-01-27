@@ -11,14 +11,14 @@ function App() {
   const dispatch = useAppDispatch();
   const messages = useAppSelector(selectMessages);
 
+  let onSubmit = async (message: TredMutation) => {
+    await dispatch(createMessage(message));
+    await dispatch(fetchMessages());
+  };
+
   useEffect(() => {
     dispatch(fetchMessages());
   }, [dispatch]);
-
-  const onSubmit = async (message: TredMutation) => {
-    await dispatch(createMessage(message));
-    await dispatch(fetchMessages);
-  };
 
   return (
     <div className="container">
