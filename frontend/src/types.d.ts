@@ -3,3 +3,7 @@ export interface TredMutation {
   message: string;
   image: File | null;
 }
+
+export interface Tred extends TredMutation{
+  id: string;
+}

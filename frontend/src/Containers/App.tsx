@@ -1,44 +1,31 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {TredMutation} from "../types";
 import './App.css';
 import TredForm from "../Components/TredForm/TredForm";
-import axiosApi from "../axiosApi";
 import TredMessage from "../Components/TredMessage/TredMessage";
+import {useAppDispatch, useAppSelector} from "../app/hooks";
+import {selectMessages} from "../store/messagesSlice";
+import {createMessage, fetchMessages} from "../store/messagesThunks";
 
 function App() {
-  const [messages, setMessages] = useState<TredMutation[]>([]);
-  const reversed = [...messages].reverse();
-
-  const run = async () => {
-    try {
-      const response = await axiosApi.get('/messages');
-      const messageData: TredMutation[] = response.data;
-
-      setMessages(messageData);
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  const dispatch = useAppDispatch();
+  const messages = useAppSelector(selectMessages);
 
   useEffect(() => {
-    run().catch(console.error);
-  }, []);
+    dispatch(fetchMessages());
+  }, [dispatch]);
 
   const onSubmit = async (message: TredMutation) => {
-    try {
-      await axiosApi.post('/messages', message);
-      run();
-    } catch (e) {
-      console.error(e);
-    }
+    await dispatch(createMessage(message));
+    await dispatch(fetchMessages);
   };
 
   return (
     <div className="container">
       <div className="App">
-        {reversed.map(message => (
+        {messages.map(message => (
           <TredMessage
-            key={Math.random().toString()}
+            key={message.id}
             message={message}
           />
         ))}
